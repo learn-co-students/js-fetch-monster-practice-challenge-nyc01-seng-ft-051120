@@ -13,13 +13,13 @@ formTemplate.innerHTML = `
 <button id="create">Create</button>
 `
 create.appendChild(formTemplate)
-//BUTTONS
+
 const createButton = document.getElementById('create')
 const forwardButton = document.getElementById('forward')
 
-//RENDER MONSTERS ON PAGE
+//FETCH & RENDER MONSTERS ON PAGE
 
-const fetchMonsters =() => {
+const fetchMonsters = () => {
 fetch(`${baseUrl}/?_limit=${limit}`)
 .then(response => response.json())
 .then(json => json.forEach(monster => render(monster)))
@@ -34,11 +34,9 @@ function render(monst) {
   <h4>age: ${monst.age}</h4>
   <p>Bio: ${monst.description}</p>`
   monsterList.appendChild(monsterDiv)
-  console.log(monsterDiv.length)
 }
 
 //CREATE NEW MONSTER
-
 const postMonster = () => {
 
   document.addEventListener('submit', e => {
@@ -59,12 +57,12 @@ const postMonster = () => {
     method: 'POST',
     body: JSON.stringify(monsterObj),
     headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
+      "Content-Type": "application/json; charset=UTF-8",
     }
     })
     .then(response => response.json())
-    .then(json => console.log(json))
+    .then(json => console.log('Success', json))
+    .catch(error => console.alert(error))
    }
  )}
   

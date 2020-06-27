@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded',()=>{
-  const MonData = () =>{ fetch("http://localhost:3000/monsters/?_limit=2_page=1")
+  limit = 5
+  const MonData = () =>{ fetch(`http://localhost:3000/monsters/?_limit=${limit}`)
     .then (resp =>resp.json())
     .then (json =>{json.forEach(monster => showMonsters(monster))})
     }
@@ -45,15 +46,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   function moreItems(){
     let buttonNext = document.getElementById('forward')
     let buttonBack = document.getElementById('back')
-    let pageNum = 1
     document.addEventListener('click',function(e){
       if (e.target == buttonNext){
-        fetch(`http://localhost:3000/monsters/?_limit=2&_page=${pageNum = pageNum +1}`)
+        fetch(`http://localhost:3000/monsters/?_limit=${limit = limit +50}`)
         .then (resp =>resp.json())
         .then (json =>{json.forEach(monster => showMonsters(monster))}) 
       }
       else if(e.target == buttonBack){
-        fetch(`http://localhost:3000/monsters/?_limit=2&_page=${pageNum = pageNum -1}`)
+        fetch(`http://localhost:3000/monsters/?_limit=${limit -50}`)
         .then (resp =>resp.json())
         .then (json =>{json.forEach(monster => showMonsters(monster))}) 
       } 

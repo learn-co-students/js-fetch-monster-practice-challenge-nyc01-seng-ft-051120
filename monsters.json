@@ -6005,6 +6005,24 @@
       "age": 13,
       "description": "131313",
       "id": 1001
+    },
+    {
+      "name": "Gypsy",
+      "age": "14",
+      "bio": "A real gypsy",
+      "id": 1002
+    },
+    {
+      "name": "Godzilla",
+      "age": "1010000",
+      "bio": "big dino",
+      "id": 1003
+    },
+    {
+      "name": "Harpy",
+      "age": "25",
+      "bio": "Flying nuisance ",
+      "id": 1004
     }
   ]
 }

@@ -43,8 +43,10 @@ function createMonster(){
     document.addEventListener('click', e=>{
         switch(e.target.id){
             case 'back': back()
+            cleanDom()
             break;
             case 'forward': forward()
+            cleanDom()
             break;
             case 'create-btn': e.preventDefault()
             createMonster()
@@ -55,22 +57,17 @@ function createMonster(){
 
     })
 })
+const cleanDom=()=>{
+    while(monsterContainer.firstChild){
+        monsterContainer.removeChild(monsterContainer.firstChild)
+    }
+}
+
 
 const forward=()=>{
-    let monsterDiv=monsterContainer.childNodes
-    for(let i=0; i<monsterDiv.length; i++){
-        monsterDiv[`${i}`].remove()
-    }
-    console.log(monsterDiv.length)
     getMonster()
 }
 const back=()=>{
-
-    let monsterDiv=monsterContainer.childNodes
-    monsterDiv.forEach(mDiv=>{
-       monsterContainer.removeChild(mDiv)
-    })
-    console.log(monsterDiv.length)
     if (ids-100>=0){
         ids -=100
     }

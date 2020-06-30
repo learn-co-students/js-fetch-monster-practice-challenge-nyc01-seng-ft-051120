@@ -2,12 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
 // waits for an interaction to occur, 
 // once triggered, executes the following: 
 
-    getMonsters()
-    createMonster()
+    getMonsters("http://localhost:3000/monsters")
+    createMonster("http://localhost:3000/monsters", newMonster)
 
 })
 
-function getMonsters() {
+function getMonsters(url) {
 // fetches all the monsters data from the server, 
 // this collection is stored as an array, 
 // the two chain functions (then()'s) deal with the response data 
@@ -22,7 +22,7 @@ function getMonsters() {
         })
 }
 
-function render(monster) {
+function render(monsterObj) {
 // turns response data into what end-users see on their screen
 // Q1. Where should each monster appear on the screen? 
     // monsterContainerDiv
@@ -33,18 +33,19 @@ function render(monster) {
     const monsterContainerDiv = document.getElementById('monster-container')
     const monsterDiv = document.createElement('div') 
     
-    monsterDiv.className    = "monsterData"
-    monsterDiv.innerHTML    = `
-                                <h2>${monster.name}</h2>
-                                <p>Age: ${monster.age}</p>
-                                <p>Description: ${monster.description}</p>
-                                <p>Id: ${monster.id}</p>
+    monsterDiv.className = "monsterData"
+    monsterDiv.innerHTML = `
+                                <h2>${monsterObj.name}</h2>
+                                <p>Age: ${monsterObj.age}</p>
+                                <p>Description: ${monsterObj.description}</p>
+                                <p>Id: ${monsterObj.id}</p>
                             `
     monsterContainerDiv.append(monsterDiv);
 }
 
-function createMonster(newMonster) {
-// 
+function createMonster(url, createdMonster) {
+// creates a new form with input fields for name, age, and description
+// also creates a 'submit' button that triggers newCreatedMonster to be posted on the monster's list as well as saved in the API  
 
     const formContainer = document.getElementById('create-monster')
     const form = document.createElement('form')
@@ -57,5 +58,36 @@ function createMonster(newMonster) {
                                 <button>Create</button>
                             `
     formContainer.append(form)
-}
 
+    const submitButton = document.querySelector('form')[3]
+    submitButton.addEventListener("submit", function(e) {
+        e.preventDefault()
+
+        if (e.target.textContent === "Create")
+            fetch("http://localhost:3000/monsters"), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                },
+                body: JSON.stringify({
+                    "name": `${createdMonster.name}`,
+                    "age": `${createdMonster.age}`,
+                    "description": `${createdMonster.description}`
+                })
+            }
+                .then(response => response.json())
+                .then(newMonsterObject => render(newMonsterObject))
+
+        const newMonster = {
+            name: e.target.getElementByTagName('form')[0].value, 
+            age: document.querySelector('form')[1].value,
+            description: document.querySelector('form')[2].value 
+        }
+
+        createMonster("http://localhost:3000/monsters", newMonster)
+        // new monster is saved in the API
+        form.reset()    
+    }) 
+
+}

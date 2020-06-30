@@ -1,19 +1,9 @@
-
-
 document.addEventListener("DOMContentLoaded", () => {
 // waits for an interaction to occur, 
 // once triggered, executes the following: 
 
-    getMonsters();
-
-})
-
-document.addEventListener("submit", function(e) {
-// e.preventDefault() allows a user to successfully create a new monster w/o page reload (after clicking the form 'submit' button called, 'Create')
-    
-    e.preventDefault();
-
-    createMonster();
+    getMonsters()
+    createMonster()
 
 })
 
@@ -40,39 +30,32 @@ function render(monster) {
     // monsterDiv.innerHTML
 // this function renders data via appending each monsterDiv to the monsterContainerDiv
 
-    const monsterContainerDiv       = document.getElementById('monster-container')
-    const monsterDiv                = document.createElement('div') 
-    monsterDiv.className            = "monsterData"
-    monsterDiv.innerHTML            = `
-                                        <h2>${monster.name}</h2>
-                                        <p>Age: ${monster.age}</p>
-                                        <p>Description: ${monster.description}</p>
-                                        <p>Id: ${monster.id}</p>
-                                    `
+    const monsterContainerDiv = document.getElementById('monster-container')
+    const monsterDiv = document.createElement('div') 
+    
+    monsterDiv.className    = "monsterData"
+    monsterDiv.innerHTML    = `
+                                <h2>${monster.name}</h2>
+                                <p>Age: ${monster.age}</p>
+                                <p>Description: ${monster.description}</p>
+                                <p>Id: ${monster.id}</p>
+                            `
     monsterContainerDiv.append(monsterDiv);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    // the event handler waits for an interaction to occur, 
-    // once triggered, executes the following: 
-    
-        getMonsters()
-    
-    })
-
-
-function createMonster() {
+function createMonster(newMonster) {
 // 
 
-    const newForm                   = document.createElement('form')
-    newForm.id                      = "monster-form"
-    const newMonsterFormContainer   = querySelector('#create-monster')
-    newMonsterFormContainer.innerHTML = '
-                                        <
-                                    '
-
-
-
-
-
+    const formContainer = document.getElementById('create-monster')
+    const form = document.createElement('form')
+    
+    form.id                 = 'monster-form'
+    form.innerHTML          = `
+                                <input id="name" placeholder="name...">
+                                <input id="age" placeholder="age...">
+                                <input id="description placeholder="description...">
+                                <button>Create</button>
+                            `
+    formContainer.append(form)
 }
+

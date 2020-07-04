@@ -1,93 +1,88 @@
 document.addEventListener("DOMContentLoaded", () => {
-// waits for an interaction to occur, 
-// once triggered, executes the following: 
 
-    getMonsters("http://localhost:3000/monsters")
-    createMonster("http://localhost:3000/monsters", newMonster)
+// GET
 
-})
+    function renderOneMonster(monster){
 
-function getMonsters(url) {
-// fetches all the monsters data from the server, 
-// this collection is stored as an array, 
-// the two chain functions (then()'s) deal with the response data 
-// 'collection of all monsters' --> 'each monster' (js objects / JSON)
+        const monsterContainer = document.getElementById('monster-container')
+        
+        const monsterDiv = document.createElement('div')
+        monsterDiv.id = monster.id
+        monsterDiv.innerHTML = `
+                                    <p>Name: ${monster.name}</p>
+                                    <p>Age: ${monster.age}</p>
+                                    <p>Description: ${monster.description}</p>
+        `
 
-    fetch("http://localhost:3000/monsters") 
-        .then(response => response.json())
-        .then(monstersCollection => {
-            monstersCollection.forEach(function(monster) {
-                render(monster)
-            })
-        })
-}
+        monsterContainer.append(monsterDiv)
+    } 
 
-function render(monsterObj) {
-// turns response data into what end-users see on their screen
-// Q1. Where should each monster appear on the screen? 
-    // monsterContainerDiv
-// Q2. How should the data for each monster be presented? (HTML / structure)
-    // monsterDiv.innerHTML
-// this function renders data via appending each monsterDiv to the monsterContainerDiv
+    function renderAllMonsters(monsters){
+        monsters.forEach(monster => renderOneMonster(monster))
+    }
 
-    const monsterContainerDiv = document.getElementById('monster-container')
-    const monsterDiv = document.createElement('div') 
-    
-    monsterDiv.className = "monsterData"
-    monsterDiv.innerHTML = `
-                                <h2>${monsterObj.name}</h2>
-                                <p>Age: ${monsterObj.age}</p>
-                                <p>Description: ${monsterObj.description}</p>
-                                <p>Id: ${monsterObj.id}</p>
-                            `
-    monsterContainerDiv.append(monsterDiv);
-}
+    function fetchAllMonstersData(url){
+        fetch(url)
+        .then(resp => resp.json())
+        .then(allMonstersDataObjects => renderAllMonsters(allMonstersDataObjects))
+    }
+    fetchAllMonstersData("http://localhost:3000/monsters/?_limit=50")
 
-function createMonster(url, createdMonster) {
-// creates a new form with input fields for name, age, and description
-// also creates a 'submit' button that triggers newCreatedMonster to be posted on the monster's list as well as saved in the API  
+// Create Form 
 
-    const formContainer = document.getElementById('create-monster')
-    const form = document.createElement('form')
-    
-    form.id                 = 'monster-form'
-    form.innerHTML          = `
-                                <input id="name" placeholder="name...">
-                                <input id="age" placeholder="age...">
-                                <input id="description placeholder="description...">
-                                <button>Create</button>
-                            `
-    formContainer.append(form)
+    function createNewMonsterForm(){
 
-    const submitButton = document.querySelector('form')[3]
-    submitButton.addEventListener("submit", function(e) {
-        e.preventDefault()
+        const formContainer = document.getElementById('create-monster')
 
-        if (e.target.textContent === "Create")
-            fetch("http://localhost:3000/monsters"), {
+        const form = document.createElement('form')
+        form.id = "monster-form"
+        form.innerHTML = `
+                            <input id="name" placeholder="Your Monster's Name">
+                            <input id="age" placeholder="Your Monster's Age">
+                            <input id="description" placeholder="Description">  
+                            <button>Create</button>
+        `
+
+        formContainer.append(form)
+    }
+    createNewMonsterForm()
+
+// POST Form's User Input 
+
+        // Step 5. 
+        function postNewMonster(url, newMonsterObject){
+            fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Accept: "application/json"
+                    "Accept": "application/json"
                 },
-                body: JSON.stringify({
-                    "name": `${createdMonster.name}`,
-                    "age": `${createdMonster.age}`,
-                    "description": `${createdMonster.description}`
-                })
-            }
-                .then(response => response.json())
-                .then(newMonsterObject => render(newMonsterObject))
-
-        const newMonster = {
-            name: e.target.getElementByTagName('form')[0].value, 
-            age: document.querySelector('form')[1].value,
-            description: document.querySelector('form')[2].value 
+                body: JSON.stringify(newMonsterObject)
+            })
+            .then(resp => resp.json())
+            .then(newMonsterDataObject => renderOneMonster(newMonsterDataObject))
         }
 
-        createMonster("http://localhost:3000/monsters", newMonster)
-        // new monster is saved in the API
-        form.reset()    
-    }) 
+    // Step 1. 
+        const monsterForm = document.getElementById('monster-form')
 
-}
+    // Step 2. 
+        monsterForm.addEventListener("submit", function(e){
+
+    // Step 3.  
+            e.preventDefault()
+
+    // Step 4. 
+            const newMonster = {
+                name: e.target.querySelector("#name").value,
+                age: e.target.querySelector("#age").value,
+                description: e.target.querySelector("#description").value
+            }
+
+    // Step 6. 
+        postNewMonster("http://localhost:3000/monsters", newMonster)
+        monsterForm.reset()
+
+    })
+
+})
